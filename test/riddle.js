@@ -1,0 +1,1 @@
+../src/riddle.js

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Test for Array features of selector result</title>
+	<link rel="stylesheet" href="../qunit/qunit.css" type="text/css" media="screen">
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+      window.domLoaded = true;
+    }, false);
+  </script>
+	<script type="text/javascript" src="../riddle.js"></script>
+	<script type="text/javascript" src="../qunit/qunit.js"></script>
+	<script type="text/javascript" src="../t/array.js"></script>
+</head>
+<body>
+	<h1 id="qunit-header">Test for Array++ features of selector result</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+  <select id="select1">
+    <option value="1">one-1</option>
+    <option value="1">one-2</option>
+    <option value="2">two</option>
+    <option value="3">three</option>
+  </select>
+
+  <select id="select2">
+    <option value="1"><p>1</p></option>
+    <option value="2"><p>2</p></option>
+    <option value="3"><p>3</p></option>
+  </select>
+</body>
+</html>

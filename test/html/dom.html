@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Test for dom manipulation function</title>
+	<link rel="stylesheet" href="../qunit/qunit.css" type="text/css" media="screen">
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+      window.domLoaded = true;
+    }, false);
+  </script>
+	<script type="text/javascript" src="../riddle.js"></script>
+	<script type="text/javascript" src="../qunit/qunit.js"></script>
+	<script type="text/javascript" src="../t/dom.js"></script>
+</head>
+<body>
+	<h1 id="qunit-header">Test for DOM manipulation function</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
+
+  <div class="div1">
+    div
+  </div>
+
+  <div class="div2">
+    div
+  </div>
+
+  <ul id="list1">
+    <li>item</li>
+    <li>item</li>
+    <li>item</li>
+  </ul>
+
+  <ul id="list2">
+    <li>item</li>
+    <li>item</li>
+    <li>item</li>
+  </ul>
+
+  <ul id="list3">
+    <li>item</li>
+    <li>item</li>
+    <li>item</li>
+  </ul>
+
+  <ul id="list4insert">
+    <li>item</li>
+    <li>item</li>
+    <li>item</li>
+  </ul>
+
+</body>
+</html>
