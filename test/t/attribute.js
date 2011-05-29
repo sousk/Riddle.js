@@ -3,7 +3,7 @@ module("test for attribute accessor function of selector results");
 is = strictEqual;
 
 test("r.fn.attr with one element", function() {
-  var list = r("#list");
+  var list = r("#list0");
   is( list.attr("name"), "list", "name of list is list");
 
   list.attr("name", "new");
@@ -15,7 +15,7 @@ test("r.fn.attr with one element", function() {
 });
 
 test("r.fn.attr with multiple elements", function() {
-  var lis = r("#lis li");
+  var lis = r("#list1 li");
 
   lis.attr("name").forEach(function(name) {
     is(name, "li", "name of li is li!");
@@ -38,32 +38,32 @@ test("r.fn.attr with multiple elements", function() {
 });
 
 test("r.fn.css with one element", function() {
-  var list = r("#ol");
-  is( list.css("font-size"), "1px", "font-size of ol is 1px");
+  var list = r("#list2");
+  is( list.css("visibility"), "visible", "visibility is visible at first");
 
-  list.css("font-size", "2px");
-  is( list.css("font-size"), "2px", "font-size updated as 2px");
+  list.css("visibility", "hidden");
+  is( list.css("visibility"), "hidden", "visibility changed as hidden");
 
-  list.css( { "font-size": "4px", "color": "#ffffff" } );
-  is( list.css("font-size"), "4px", "font-size updated as 4px");
+  list.css( { "visibility": "visible", "color": "#ffffff" } );
+  is( list.css("visibility"), "visible", "visibility get back to visible");
   is( list.css("color"), "rgb(255, 255, 255)", "color updated as #ffffff");
 });
 
 test("r.fn.css with multiple elements", function() {
-  var lis = r("#ol li");
+  var lis = r("#list3 li");
 
-  lis.css("font-size").forEach(function(fontSize) {
-    is( fontSize, "2px", "font-size of li 2px!");
+  lis.css("display").forEach(function(display) {
+    is( display, "list-item", "display of li is list-item at first");
   });
 
-  lis.css("font-size", "3px");
-  lis.css("font-size").forEach(function(fontSize) {
-    is( fontSize, "3px", "font-size of li 2px!");
+  lis.css("display", "block");
+  lis.css("display").forEach(function(display) {
+    is( display, "block", "display of li is block, next");
   });
 
-  lis.css( { "font-size": "4px", "color": "#fffff" } );
-  lis.css("font-size").forEach(function(fontSize) {
-    is( fontSize, "4px", "font-size of li is 2px!");
+  lis.css( { "display": "inline", "color": "#ffffff" } );
+  lis.css("display").forEach(function(display) {
+    is( display, "inline", "display of li inline now!");
   });
   lis.css("color").forEach(function(color) {
     is(color, "rgb(255, 255, 255)", "color of li is #ffffff!");
