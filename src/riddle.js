@@ -188,11 +188,6 @@ var r = (function(doc, toArray, enc) {
 
   // attributes
 
-  function isNormalNode(elem) {
-    var type = elem.nodeType;
-    return !(type === 3 || type === 8 || type === 2);
-  }
-
   function attr(key, value) {
     if ( typeof key === "string" ) {
       if ( typeof value === "undefined" ) {
@@ -208,7 +203,7 @@ var r = (function(doc, toArray, enc) {
       }
     }
     else if ( typeof key === "object" ) {
-      this.filter(isNormalNode).forEach(function(elem) {
+      this.forEach(function(elem) {
         for ( var k in key ) {
           elem.setAttribute(k, String(key[k]));
         }
@@ -231,13 +226,13 @@ var r = (function(doc, toArray, enc) {
       else {
         var param = {};
         param[key] = value;
-        this.filter(isNormalNode).forEach(function(elem) {
+        this.forEach(function(elem) {
           elem.style.cssText += ";" + cssPair(param);
         });
       }
     }
     else if ( typeof key === "object" ) {
-      this.filter(isNormalNode).forEach(function(elem) {
+      this.forEach(function(elem) {
         elem.style.cssText += ";" + cssPair(key);
       });
     }
@@ -275,7 +270,7 @@ var r = (function(doc, toArray, enc) {
   }
 
   function bind(event, callback, useCapture) {
-    this.filter(isNormalNode).forEach(function(elem) {
+    this.forEach(function(elem) {
       var id = getNodeId(elem),
           bounds = listeners[id] || (listeners[id] = []);
       bounds.push( { event: event, callback: callback, index: bounds.length } );
@@ -284,7 +279,7 @@ var r = (function(doc, toArray, enc) {
   }
 
   function unbind(event) {
-    this.filter(isNormalNode).forEach(function(elem) {
+    this.forEach(function(elem) {
       var id = getNodeId(elem),
           bounds = listeners[id];
       findBoundsByEvent(bounds, event).forEach(function(bound) {

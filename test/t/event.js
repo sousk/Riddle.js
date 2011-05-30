@@ -3,80 +3,65 @@ module("test for event-binding functions");
 var events = ["click", "focus", "blur", "scroll", "select", "change"];
 
 is = strictEqual;
-isnt = notStrictEqual;
 
-function emit(el, event, callback) {
-  var e = document.createEvent("Event");
-  e.initEvent(event, true, true);
-  el.dispatchEvent(e);
-
-  if ( callback ) {
-    // this is not good manner for async operations, but this time it's ok.
-    callback(e, el);
-  }
+function emit(el, eventName, callback) {
+  var event = document.createEvent("Event");
+  event.initEvent(eventName, true, true);
+  ( el.__proto__ === r.fn ) ? el[0].dispatchEvent(event) : el.dispatchEvent(event);
 }
 
-function testEvent(event, expectTimes) {
-  testEvent.times || (testEvent.times = {});
-  testEvent.times[event] || (testEvent.times[event] = 0);
-
-  test("r.fn." + event, function() {
-    var button = r("#button");
-
-    button[event](function(e) {
-      ok( e.target === button[0], "event target is button" );
-      ok( e.type === event, "event type is " + event );
-      testEvent.times[event]++;
-    });
-  
-    emit(button[0], event, function() {
-      is( testEvent.times[event], expectTimes, event + " bound function called");
-    });
+function testBind(wrapped, eventName, callback) {
+  var spy = sinon.spy(function(e) {
+    ok ( e.target === wrapped[0], "event target original element");
+    ok ( e.type === eventName, "event type should be " + eventName);
   });
+  wrapped.bind(eventName, spy);
+  emit(wrapped, eventName);
+  ok( spy.calledOnce, eventName + " emitted and callback function called successfully");
 }
 
+function testUnbind(wrapped, eventName, callback) {
+  var spy = sinon.spy(function(e) {});
+  wrapped.bind(eventName, spy);
+  wrapped.unbind(eventName);
 
-test("r.fn.bind and r.fn.unbind", function() {
-  var button = r("#button"),
-      clickTimes = 0,
-      blurTimes = 0;
+  emit(wrapped, eventName);
+  ok( ! spy.called, eventName + " emitted but callback function not called");
+}
 
-  button.bind("click", function(e) {
-    ok( e.target === button[0], "event target is clicked button" );
-    ok( e.type === "click", "event type is click" );
-    clickTimes++;
+function testShortCut(wrapped, eventName, callback) {
+  var spy = sinon.spy(function(e) {
+    ok ( e.target === wrapped[0], "event target original element");
+    ok ( e.type === eventName, "event type should be " + eventName);
   });
+  wrapped[eventName](spy);
+  emit(wrapped, eventName);
+  ok( spy.calledOnce, eventName + " emitted and callback function called successfully");
+}
 
-  button.bind("blur", function(e) {
-    ok( e.target === button[0], "event target is clicked button" );
-    ok( e.type === "blur", "event type is blur" );
-    blurTimes++;
+test("r.fn.bind", function() {
+  var button = r("#button1");
+
+  events.forEach(function(event) {
+    testBind(button, event);
   });
+});
 
-  emit(button[0], "click", function() {
-    is( clickTimes, 1, "click bound function called");
-    is( blurTimes, 0, "blur bound function not called");
-  });
+test("r.fn.unbind", function() {
+  var button = r("#button2");
 
-  emit(button[0], "blur", function() {
-    is( clickTimes, 1, "click bound function not called");
-    is( blurTimes, 1, "blur bound function called");
-  });
-
-  button.unbind("click");
-
-  emit(button[0], "click", function() {
-    is( clickTimes, 1, "click bound function unbound");
-  });
-
-  emit(button[0], "blur", function() {
-    is( blurTimes, 2, "blur bound function not unbound");
+  events.forEach(function(event) {
+    testUnbind(button, event);
   });
 });
 
 
 // test for shofthand methods
 
-events.forEach(function(event) {
-  testEvent(event, 1);
+test("r.fn.[\"eventName\"]", function() {
+  var button = r("#button3");
+
+  events.forEach(function(event) {
+    testShortCut(button, event);
+  });
 });
