@@ -8,6 +8,32 @@ var r = (function(doc, toArray, enc) {
       readyErr = "r(callback) and r(selector) are only allowed.";
 
 
+/**
+ * <p> Select HTMLElements, wait DOMContentLoaded or wrap HTMLElement with r.fn <br /> Usages are:
+ * <ul>
+ * <li>Select and wrap HTML Elements with r(selector: String, [context: HTMLElement]).
+ * <li>Wait DOMContentLoaded with r(func: Function). <br/>
+ * <li>Just to wrap HTMLElement with r(elem: HTMLElement)
+ * <ul/>
+ * @name r
+ * @function
+ * @param first {String|Function|HTMLElement}
+ * @param second [HTMLElement]
+ * @throws {Error} If arguments not correct
+ * @return {NodeArray} On Selector or wrapper usage
+ * @example
+ * var elementsById = r("#id");
+ * var elementsByClass = r(".class");
+ * var elementsByTag = r("tag");
+ * @example
+ * r(function() {
+ *   // put initialization process here, which you want to run after DOMContentLoaded event
+ * });
+ * @example
+ * r("#id").bind(function(e) {
+ *   var wrapped = r(e.target);
+ * });
+ */
   function R(first, second) {
     if ( typeof first === "string" ) {
       if ( typeof second === "undefined" || second instanceof HTMLElement ) {
@@ -49,6 +75,11 @@ var r = (function(doc, toArray, enc) {
     return ary;
   }
 
+ /**
+  * Base class of HTMLElement Array collected by selector.
+  * @name r.fn
+  * @class base class of HTMLElement Array collected by selector.
+  */
   R.fn = {
     // Array++
     detect: detect,
@@ -122,12 +153,29 @@ var r = (function(doc, toArray, enc) {
   R.fn.__proto__ = Array.prototype;
 
 
-  // Array++
+// Array++
 
+/**
+ * Get the first Element which returns true with given predicate
+ * @name detect
+ * @function
+ * @param pred {Function}
+ * @return {HTMLElement} HTMLElement if found
+ * @example
+ * var apple = r("select#fruits option").detect(function(option) { return option.value === "apple"; });
+ */
   function detect(pred) {
     return this.filter(pred)[0];
   }
 
+/**
+ * Invoke function for each element and produce result Array
+ * @name invoke
+ * @function
+ * @memberOf r.fn
+ * @param functionName {String}
+ * @return {Array} Array of produced results
+ */
   function invoke() {
     var args = toArray.call(arguments), func = args.shift();
     return this.map(function(item) {
@@ -135,13 +183,48 @@ var r = (function(doc, toArray, enc) {
     });
   }
 
+/**
+ * Collect properties of all elements with given key
+ * @name pluck
+ * @function
+ * @memberOf r.fn
+ * @param key {String}
+ * @return {Array} Array of properties
+ * @example
+ * var values = r("select#fruits option").pluck("value");
+ */
   function pluck(key) {
     return this.map(function(item) { return item[key]; });
   }
 
 
-  // DOM
+// DOM
 
+/**
+ * <p> Get/Set innerHTML of elements </p>
+ * <ul>
+ * <li> html(): returns html: String if selector has just one element
+ * <li> html(): returns htmls: Array[String] if selector has more than two elements
+ * <li> html(str): set string as innerHTML for all elements
+ * <li> html(elem): set HTMLElement as innerHTML for all elements
+ * <li> html(nodeArray): set NodeArray as innerHTML for all elements
+ * <ul/>
+ * @name html
+ * @function
+ * @memberOf r.fn
+ * @param html {String|HTMLElement|NodeArray}
+ * @return {String|Array[String]}
+ * @example
+ * var story = r("p#story").html();
+ * @example
+ * var colors = r("li.colors").html();
+ * @example
+ * r("li.colors").html("black");
+ * @example
+ * r("li.colors").html(document.getElementById("#my-color"));
+ * @example
+ * r("#story").html(r("li#stories"));
+ */
   function html(item) {
     if ( typeof item === "undefined" ) {
       if ( this.length === 1 ) {
@@ -166,10 +249,29 @@ var r = (function(doc, toArray, enc) {
     }
   }
 
+/**
+ * Remove elements from document tree
+ * @name remove
+ * @function
+ * @memberOf r.fn
+ * @example
+ * r(".grief").remove();
+ */
   function remove() {
     this.forEach(function(elem) { elem.parentNode.removeChild(elem) });
   }
 
+/**
+ * append elements to selected NodeArray
+ * @name add
+ * @function
+ * @memberOf r.fn
+ * @param elem {HTMLElement|NodeArray}
+ * @example
+ * r(".magical-girl").add(document.getElementById("#madoka"));
+ * @example
+ * r(".magical-girl").add(r("#madoka, #sayaka"));
+ */
   function add(item) {
     if ( item.__proto__ === r.fn ) {
       this.forEach(function(elem) {
@@ -186,8 +288,30 @@ var r = (function(doc, toArray, enc) {
   }
 
 
-  // attributes
+// attributes
 
+/**
+ * <p> Get/Set attribute(s) of elements </p>
+ * <ul>
+ * <li> attr(): returns attribute: String if selector has just one element
+ * <li> attr(): returns attributes: Array[String] if selector has more than two elements
+ * <li> attr(key, value): set attribute_hash[key] = value
+ * <li> attr(object): set attribute_hash[key] = value for each object
+ * <ul/>
+ * @name attr
+ * @function
+ * @memberOf r.fn
+ * @param html {String|HTMLElement|NodeArray}
+ * @return {String|Array[String]}
+ * @example
+ * var value = r("#age").attr("value");
+ * @example
+ * var values = r("option.age").attr("value");
+ * @example
+ * r(".links-change").attr("href", "http://example.com");
+ * @example
+ * r(".links-change").attr( { href: "http://example.com", target: "_blank" } );
+ */
   function attr(key, value) {
     if ( typeof key === "string" ) {
       if ( typeof value === "undefined" ) {
@@ -294,8 +418,6 @@ var r = (function(doc, toArray, enc) {
     e.initEvent(event, true, true);
     elem.dispatchEvent(e);
   }
-
-
 
 
   // ajax
