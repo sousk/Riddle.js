@@ -123,11 +123,9 @@ var r = (function(doc, toArray, enc) {
 
       if ( touch.x1 && touch.x2 && Math.abs(delta) > 30 ) {
         if ( delta > 0 ) {
-          // swipeLeft
           trigger(touch.target, "swipeLeft");
         }
         else {
-          // swipeRight
           trigger(touch.target, "swipeRight");
         }
       }
