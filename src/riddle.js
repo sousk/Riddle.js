@@ -2,10 +2,8 @@ var r = (function(doc, toArray, enc) {
 
   var listeners = {}, nodeId = 1,
       events = ["click", "submit", "focus", "blur", "scroll", "select", "change"],
-      touchEvents = ["swipeLeft", "swipeRight", "tap"],
-      touch = { x1: 0, x2: 0 },
       domLoaded = false,
-      readyErr = "r(callback) and r(selector) are only allowed.";
+      readyErr = "r(selector, [context]), r(callback), r(element) are only allowed.";
 
 /**
  * <p> Select HTMLElements, wait DOMContentLoaded or wrap HTMLElement with r.fn <br /> Usages are:
@@ -99,49 +97,11 @@ var r = (function(doc, toArray, enc) {
     unbind: unbind
   };
 
-
-  // event initialization
-
-  function search(node) {
-    return 'tagName' in node ? node : node.parentNode;
-  }
-
   doc.addEventListener("DOMContentLoaded", function(e) {
     domLoaded = true;
-
-    doc.body.addEventListener("touchstart", function(e) {
-      touch.target = search(e.touches[0].target);
-      touch.x1 = e.touches[0].pageX;
-    }, false);
-
-    doc.body.addEventListener("touchmove", function(e) {
-      touch.x2 = e.touches[0].pageX;
-    }, false);
-
-    doc.body.addEventListener("touchend", function(e) {
-      var delta = touch.x1 - touch.x2;
-
-      if ( touch.x1 && touch.x2 && Math.abs(delta) > 30 ) {
-        if ( delta > 0 ) {
-          trigger(touch.target, "swipeLeft");
-        }
-        else {
-          trigger(touch.target, "swipeRight");
-        }
-      }
-      else {
-        // tap
-        trigger(touch.target, "tap");
-      }
-
-      touch.target = null;
-      touch.x1 = touch.x2 = 0;
-    }, false);
-
   }, false);
 
-
-  events.concat(touchEvents).forEach(function(event) {
+  events.forEach(function(event) {
     R.fn[event] = function(callback, useCapture) {
       this.bind(event, callback, useCapture);
     };
@@ -470,12 +430,6 @@ var r = (function(doc, toArray, enc) {
         elem.removeEventListener(event, bound.callback, false);
       });
     });
-  }
-
-  function trigger(elem, event) {
-    var e = doc.createEvent("Event");
-    e.initEvent(event, true, true);
-    elem.dispatchEvent(e);
   }
 
 

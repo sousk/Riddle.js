@@ -4,13 +4,13 @@ var events = ["click", "focus", "blur", "scroll", "select", "change"];
 
 is = strictEqual;
 
-function emit(el, eventName, callback) {
+function emit(el, eventName) {
   var event = document.createEvent("Event");
   event.initEvent(eventName, true, true);
   ( el.__proto__ === r.fn ) ? el[0].dispatchEvent(event) : el.dispatchEvent(event);
 }
 
-function testBind(wrapped, eventName, callback) {
+function testBind(wrapped, eventName) {
   var spy = sinon.spy(function(e) {
     ok ( e.target === wrapped[0], "event target original element");
     ok ( e.type === eventName, "event type should be " + eventName);
@@ -20,7 +20,7 @@ function testBind(wrapped, eventName, callback) {
   ok( spy.calledOnce, eventName + " emitted and callback function called successfully");
 }
 
-function testUnbind(wrapped, eventName, callback) {
+function testUnbind(wrapped, eventName) {
   var spy = sinon.spy(function(e) {});
   wrapped.bind(eventName, spy);
   wrapped.unbind(eventName);
@@ -29,7 +29,7 @@ function testUnbind(wrapped, eventName, callback) {
   ok( ! spy.called, eventName + " emitted but callback function not called");
 }
 
-function testShortCut(wrapped, eventName, callback) {
+function testShortCut(wrapped, eventName) {
   var spy = sinon.spy(function(e) {
     ok ( e.target === wrapped[0], "event target original element");
     ok ( e.type === eventName, "event type should be " + eventName);
