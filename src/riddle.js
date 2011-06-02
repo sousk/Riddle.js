@@ -63,11 +63,16 @@ var r = (function(doc, toArray, enc) {
     return wrap(nodeArray);
   }
 
-  function wrap(nodeArray) {
-    var ary = nodeArray;
-    if ( ! Array.isArray(ary) ) {
+  function wrap(el) {
+    var ary = el;
+
+    if ( el instanceof HTMLElement ) {
       ary = [ary];
     }
+    else if ( typeof el.length === "number" && typeof el.item === "function" ) {
+      ary = toArray.call(ary);
+    }
+
     ary.__proto__ = R.fn;
     return ary;
   }
@@ -91,6 +96,8 @@ var r = (function(doc, toArray, enc) {
     // attribute
     attr: attr,
     css: css,
+    addClass: addClass,
+    removeClass: removeClass,
 
     // event
     bind: bind,
