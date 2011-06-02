@@ -7,7 +7,6 @@ var r = (function(doc, toArray, enc) {
       domLoaded = false,
       readyErr = "r(callback) and r(selector) are only allowed.";
 
-
 /**
  * <p> Select HTMLElements, wait DOMContentLoaded or wrap HTMLElement with r.fn <br /> Usages are:
  * <ul>
@@ -17,8 +16,8 @@ var r = (function(doc, toArray, enc) {
  * <ul/>
  * @name r
  * @function
- * @param first {String|Function|HTMLElement}
- * @param second [HTMLElement]
+ * @param first {(string|function|HTMLElement)}
+ * @param second {?HTMLElement}
  * @throws {Error} If arguments not correct
  * @return {NodeArray} On Selector or wrapper usage
  * @example
@@ -159,7 +158,8 @@ var r = (function(doc, toArray, enc) {
  * Get the first Element which returns true with given predicate
  * @name detect
  * @function
- * @param pred {Function}
+ * @nosideeffects
+ * @param pred {function}
  * @return {HTMLElement} HTMLElement if found
  * @example
  * var apple = r("select#fruits option").detect(function(option) { return option.value === "apple"; });
@@ -173,7 +173,7 @@ var r = (function(doc, toArray, enc) {
  * @name invoke
  * @function
  * @memberOf r.fn
- * @param functionName {String}
+ * @param functionName {string}
  * @return {Array} Array of produced results
  */
   function invoke() {
@@ -187,8 +187,9 @@ var r = (function(doc, toArray, enc) {
  * Collect properties of all elements with given key
  * @name pluck
  * @function
+ * @nosideeffects
  * @memberOf r.fn
- * @param key {String}
+ * @param key {string}
  * @return {Array} Array of properties
  * @example
  * var values = r("select#fruits option").pluck("value");
@@ -212,8 +213,8 @@ var r = (function(doc, toArray, enc) {
  * @name html
  * @function
  * @memberOf r.fn
- * @param html {String|HTMLElement|NodeArray}
- * @return {String|Array[String]}
+ * @param html {(string|HTMLElement|NodeArray)}
+ * @return {(string|Array.<string>)}
  * @example
  * var story = r("p#story").html();
  * @example
@@ -255,7 +256,7 @@ var r = (function(doc, toArray, enc) {
  * @function
  * @memberOf r.fn
  * @example
- * r(".grief").remove();
+ * r("#mami .head").remove();
  */
   function remove() {
     this.forEach(function(elem) { elem.parentNode.removeChild(elem) });
@@ -266,11 +267,11 @@ var r = (function(doc, toArray, enc) {
  * @name add
  * @function
  * @memberOf r.fn
- * @param elem {HTMLElement|NodeArray}
+ * @param elem {(HTMLElement|NodeArray)}
  * @example
  * r(".magical-girl").add(document.getElementById("#madoka"));
  * @example
- * r(".magical-girl").add(r("#madoka, #sayaka"));
+ * r(".magical-girl").add(r("#madoka, #homura"));
  */
   function add(item) {
     if ( item.__proto__ === r.fn ) {
@@ -293,16 +294,17 @@ var r = (function(doc, toArray, enc) {
 /**
  * <p> Get/Set attribute(s) of elements </p>
  * <ul>
- * <li> attr(): returns attribute: String if selector has just one element
- * <li> attr(): returns attributes: Array[String] if selector has more than two elements
- * <li> attr(key, value): set attribute_hash[key] = value
- * <li> attr(object): set attribute_hash[key] = value for each object
+ * <li> attr(name): returns attribute: String if selector has just one element
+ * <li> attr(name): returns attributes: Array[String] if selector has more than two elements
+ * <li> attr(name, value): set value to element's attribute
+ * <li> attr(hash): set values to element's attribute
  * <ul/>
  * @name attr
  * @function
  * @memberOf r.fn
- * @param html {String|HTMLElement|NodeArray}
- * @return {String|Array[String]}
+ * @param name {(string|Object)}
+ * @param value {?string}
+ * @return {(string|Array.<string>)}
  * @example
  * var value = r("#age").attr("value");
  * @example
@@ -312,29 +314,52 @@ var r = (function(doc, toArray, enc) {
  * @example
  * r(".links-change").attr( { href: "http://example.com", target: "_blank" } );
  */
-  function attr(key, value) {
-    if ( typeof key === "string" ) {
+  function attr(name, value) {
+    if ( typeof name === "string" ) {
       if ( typeof value === "undefined" ) {
         if ( this.length === 1 ) {
-          return this[0].getAttribute(key);
+          return this[0].getAttribute(name);
         }
         else {
-          return this.invoke("getAttribute", key);
+          return this.invoke("getAttribute", name);
         }
       }
       else {
-        this.invoke("setAttribute", key, String(value));
+        this.invoke("setAttribute", name, String(value));
       }
     }
-    else if ( typeof key === "object" ) {
+    else if ( typeof name === "object" ) {
       this.forEach(function(elem) {
-        for ( var k in key ) {
-          elem.setAttribute(k, String(key[k]));
+        for ( var k in name ) {
+          elem.setAttribute(k, String(name[k]));
         }
       });
     }
   }
 
+/**
+ * <p> Get/Set css property(properties) of elements </p>
+ * <ul>
+ * <li> css(key): returns css style value: String if selector has just one element
+ * <li> css(key): returns css style values: Array[String] if selector has more than two elements
+ * <li> css(key, value): set css style value
+ * <li> css(hash): set css style values
+ * <ul/>
+ * @name css
+ * @function
+ * @memberOf r.fn
+ * @param key {(string|Object)}
+ * @param value {?string}
+ * @return {(string|Array.<string>)}
+ * @example
+ * var bodyHeight = r("body").css("height");
+ * @example
+ * var listHeights = r("li.familiar").css("height");
+ * @example
+ * r("#hyde").css("height", "156px");
+ * @example
+ * r(".monster").css( { visibility: "visible", background-color: "red" } );
+ */
   function css(key, value) {
     if ( typeof key === "string" ) {
       if ( typeof value === "undefined" ) {
@@ -370,12 +395,26 @@ var r = (function(doc, toArray, enc) {
     return css;
   }
 
+/**
+ * set class to elements
+ * @name addClass
+ * @function
+ * @memberOf r.fn
+ * @param className {string}
+ */
   function addClass(name) {
     this.forEach(function(elem) {
       elem.className += " " + name;
     });
   }
 
+/**
+ * remove class from elements
+ * @name removeClass
+ * @function
+ * @memberOf r.fn
+ * @param className {string}
+ */
   function removeClass(name) {
     this.forEach(function(elem) {
       elem.className = elem.className.replace(name, " ");
@@ -393,6 +432,19 @@ var r = (function(doc, toArray, enc) {
     return bounds.filter(function(bound) { return bound.event === event });
   }
 
+/**
+ * bind callback function to elements
+ * @name bind
+ * @function
+ * @memberOf r.fn
+ * @param event {string}
+ * @param callback {function(e: Object)}
+ * @param useCapture {?boolean}
+ * @example
+ * r("#button").bind("click", function(e) {
+ *   alert("button clicked on" + e.target.tagName);
+ * });
+ */
   function bind(event, callback, useCapture) {
     this.forEach(function(elem) {
       var id = getNodeId(elem),
@@ -402,6 +454,15 @@ var r = (function(doc, toArray, enc) {
     });
   }
 
+/**
+ * unbind alreaedy-bound callback function from elements
+ * @name bind
+ * @function
+ * @memberOf r.fn
+ * @param event {string}
+ * @example
+ * r("#button").unbind("click");
+ */
   function unbind(event) {
     this.forEach(function(elem) {
       var id = getNodeId(elem),
@@ -432,6 +493,37 @@ var r = (function(doc, toArray, enc) {
     return result + set.join("&");
   }
 
+/**
+ * send XMLHttpRequest to given URL to get data
+ * @name ajax
+ * @function
+ * @nosideeffects
+ * @memberOf r
+ * @param url {string}
+ * @param success {function(string, Object)}
+ * @param error {?function(Object)}
+ * @param options {?{method: string, header: Object, ctype: string, data: Object}}
+ * @example
+ * r.ajax("http://example.com/people/get", function(data, xhr) {
+ *   r("#people").html(data);
+ * });
+ * @example
+ * r.ajax("http://example.com/articles", function(data, xhr) {
+ *   r("#article").html(data.result);
+ * }, function(xhr) {
+ *   r("#article").html("Oops! Something is wrong!");
+ *   console.dir(xhr);
+ * }, {
+ *   method: "POST",
+ *   data: {
+ *     foo: "bar",
+ *     bar: "baz",
+ *   },
+ *   header: {
+ *     "X-FooBar": "baz"
+ *   },
+ * });
+ */
   function ajax(url, success, error, options) {
     var xhr = new XMLHttpRequest(),
         options = options || {},
@@ -472,10 +564,28 @@ var r = (function(doc, toArray, enc) {
 
   // elements with cache
 
+/**
+ * select a element by id and wrap it as NodeArray
+ * @name id
+ * @function
+ * @memberOf r
+ * @param identifier {string}
+ * @param context [HTMLElement]
+ * @return NodeArray
+ */
   function id(identifier, context) {
     return wrap(id._[identifier] || (id._[identifier] = (context || doc).getElementById(identifier)));
   }
 
+/**
+ * select elements by class and wrap it as NodeArray
+ * @name cls
+ * @function
+ * @memberOf r
+ * @param name {string}
+ * @param context [HTMLElement]
+ * @return NodeArray
+ */
   function cls(name, context) {
     return wrap(cls._[name] || (cls._[name] = (context || doc).getElementsByClassName(name)));
   }
