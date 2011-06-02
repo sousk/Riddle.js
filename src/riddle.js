@@ -456,7 +456,7 @@ var r = (function(doc, toArray, enc) {
 
 /**
  * unbind alreaedy-bound callback function from elements
- * @name bind
+ * @name unbind
  * @function
  * @memberOf r.fn
  * @param event {string}
