@@ -564,6 +564,8 @@ var r = (function(doc, toArray, enc) {
   R.cls = cls;
   R.ajax = ajax;
 
+  R.version = "0.1.2";
+
   return R;
 
 })(document, Array.prototype.slice, encodeURIComponent);
