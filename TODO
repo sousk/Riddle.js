@@ -1,3 +1,4 @@
 * write Rakefile or something for build
 * write README
 * fix removeClass bug
+* check if library-side dom cache is good feature or not
