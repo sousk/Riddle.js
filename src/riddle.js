@@ -124,6 +124,7 @@ var r = (function(doc, toArray, enc) {
  * @name detect
  * @function
  * @nosideeffects
+ * @memberOf r.fn
  * @param pred {function}
  * @return {HTMLElement} HTMLElement if found
  * @example
