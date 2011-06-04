@@ -2,9 +2,7 @@ var r = (function(doc, toArray, enc) {
 
   var listeners = {}, nodeId = 1,
       events = ["click", "submit", "focus", "blur", "scroll", "select", "change"],
-      _insertAdjacentHTML = "insertAdjacentHTML",
-      domLoaded = false,
-      readyErr = "r(selector, [context]), r(callback), r(element) are only allowed.";
+      domLoaded = false;
 
 /**
  * <p> Select HTMLElements, wait DOMContentLoaded or wrap HTMLElement with r.fn <br /> Usages are:
@@ -37,9 +35,6 @@ var r = (function(doc, toArray, enc) {
       if ( typeof second === "undefined" || second instanceof HTMLElement ) {
         return $(first, second);
       }
-      else {
-        throw new Error(readyErr);
-      }
     }
     else if ( first instanceof HTMLElement ) {
       return wrap(first);
@@ -53,9 +48,6 @@ var r = (function(doc, toArray, enc) {
           first(r);
         }, false);
       }
-    }
-    else {
-      throw new Error(readyErr);
     }
   }
 
@@ -264,21 +256,25 @@ var r = (function(doc, toArray, enc) {
     }
   }
 
+  add.prev = addPrev;
+  add.first = addFirst;
+  add.last = addLast;
+  add.next = addNext;
 
   function addPrev(elem, text) {
-    elem[_insertAdjacentHTML]("beforeBegin", text);
+    elem.insertAdjacentHTML("beforeBegin", text);
   }
 
   function addFirst(elem, text) {
-    elem[_insertAdjacentHTML]("afterBegin", text);
+    elem.insertAdjacentHTML("afterBegin", text);
   }
 
   function addLast(elem, text) {
-    elem[_insertAdjacentHTML]("beforeEnd", text);
+    elem.insertAdjacentHTML("beforeEnd", text);
   }
 
   function addNext(elem, text) {
-    elem[_insertAdjacentHTML]("afterEnd", text);
+    elem.insertAdjacentHTML("afterEnd", text);
   }
 
 
@@ -589,16 +585,11 @@ var r = (function(doc, toArray, enc) {
 
   // add public method to R
 
-  add.prev = addPrev;
-  add.first = addFirst;
-  add.last = addLast;
-  add.next = addNext;
-
   R.id = id;
   R.cls = cls;
   R.ajax = ajax;
 
-  R.version = "0.1.4";
+  R.version = "0.1.5";
 
   return R;
 

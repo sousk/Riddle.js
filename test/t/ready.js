@@ -36,27 +36,3 @@ test("r with HTMLElement -> wrap it", function() {
   ok( Array.isArray(wrapped), "wrapped Object is subtype of Array");
   is( wrapped.__proto__, r.fn, "__proto__ of wrapped Object is r.fn" );
 });
-
-test("r with Other types -> throw Error", function() {
-
-  function testError() {
-    var args = Array.prototype.slice(arguments),
-        type = args.shift();
-
-    raises(function() {
-      r.apply(r, args);
-    }, function(e) {
-      return e.name === "Error";
-    }, "r with " + type + " throws Error");
-  }
-
-  testError("null", null);
-  testError("undefined", void(0));
-  testError("number", 1);
-  testError("object", {});
-
-  testError("string and null", "string", null);
-  testError("string and undefined", "string", void(0));
-  testError("string and number", "string", 1);
-  testError("string and plain object", "string", {});
-});
