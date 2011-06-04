@@ -15,7 +15,6 @@ var r = (function(doc, toArray, enc) {
  * @function
  * @param first {(string|function|HTMLElement)}
  * @param second {?HTMLElement}
- * @throws {Error} If arguments not correct
  * @return {NodeArray} On Selector or wrapper usage
  * @example
  * var elementsById = r("#id");
@@ -171,6 +170,7 @@ var r = (function(doc, toArray, enc) {
  * @function
  * @memberOf r.fn
  * @param html {(string|HTMLElement|NodeArray)}
+ * @param html {?string}
  * @return {(string|Array.<string>)}
  * @example
  * var story = r("p#story").html();
@@ -224,7 +224,9 @@ var r = (function(doc, toArray, enc) {
   }
 
 /**
- * append elements to selected NodeArray
+ * Append elements to selected NodeArray. <br />
+ * You can specify the position to insert by the second argument (default value is "last"), <br />
+ * see http://msdn.microsoft.com/ja-jp/library/cc428075.aspx or http://ejohn.org/blog/dom-insertadjacenthtml/
  * @name add
  * @function
  * @memberOf r.fn
@@ -234,7 +236,15 @@ var r = (function(doc, toArray, enc) {
  * @example
  * r(".magical-girl").add(r("#madoka, #homura"));
  * @example
- * r("#QB").add("injuu");
+ * r("#madoka").add("homuhomu");
+ * @example
+ * r("#madoka").add("homuhomu", "prev");
+ * @example
+ * r("#madoka").add("homuhomu", "first");
+ * @example
+ * r("#madoka").add("homuhomu", "last");
+ * @example
+ * r("#madoka").add("homuhomu", "next");
  */
   function add(item, position) {
     var text, pos = position || "last";
