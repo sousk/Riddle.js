@@ -566,7 +566,7 @@ var r = (function(doc, toArray, enc) {
   R.cls = cls;
   R.ajax = ajax;
 
-  R.version = "0.1.2";
+  R.version = "0.1.4";
 
   return R;
 
