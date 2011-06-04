@@ -11,8 +11,9 @@ Riddle.js is simple and stupid selector-based JavaScript library mainly for iPho
 Riddle.js is:
 -------
 
-* to be thin wrapper
-* to be small-sized
+* to be thin
+* to be simple
+* to be small
 
 
 Riddle.js is not:
