@@ -2,6 +2,7 @@ var r = (function(doc, toArray, enc) {
 
   var listeners = {}, nodeId = 1,
       events = ["click", "submit", "focus", "blur", "scroll", "select", "change"],
+      _insertAdjacentHTML = "insertAdjacentHTML",
       domLoaded = false,
       readyErr = "r(selector, [context]), r(callback), r(element) are only allowed.";
 
@@ -123,7 +124,6 @@ var r = (function(doc, toArray, enc) {
  * Get the first Element which returns true with given predicate
  * @name detect
  * @function
- * @nosideeffects
  * @memberOf r.fn
  * @param pred {function}
  * @return {HTMLElement} HTMLElement if found
@@ -153,7 +153,6 @@ var r = (function(doc, toArray, enc) {
  * Collect properties of all elements with given key
  * @name pluck
  * @function
- * @nosideeffects
  * @memberOf r.fn
  * @param key {string}
  * @return {Array} Array of properties
@@ -246,24 +245,40 @@ var r = (function(doc, toArray, enc) {
  * r("#QB").add("injuu");
  */
   function add(item, position) {
-    var flg, clone;
+    var text, pos = position || "last";
 
     if ( item.__proto__ === r.fn ) {
-      flg = doc.createDocumentFragment();
-      item.forEach(function(elem) { flg.appendChild(elem); });
-      this.forEach(function(elem) { elem.appendChild(flg); });
+      text = item.map(function(el) { return el.outerHTML; }).join("");
+      this.forEach(function(elem) { add[pos](elem, text); });
     }
     else if ( item instanceof HTMLElement ) {
-      clone = item.cloneNode(true);
+      text = item.outerHTML;
       this.forEach(function(elem) {
-        elem.appendChild(clone);
+        add[pos](elem, text);
       });
     }
     else if ( typeof item === "string" ) {
       this.forEach(function(elem) {
-        elem.insertAdjacentHTML("beforeEnd", item);
+        add[pos](elem, item);
       });
     }
+  }
+
+
+  function addPrev(elem, text) {
+    elem[_insertAdjacentHTML]("beforeBegin", text);
+  }
+
+  function addFirst(elem, text) {
+    elem[_insertAdjacentHTML]("afterBegin", text);
+  }
+
+  function addLast(elem, text) {
+    elem[_insertAdjacentHTML]("beforeEnd", text);
+  }
+
+  function addNext(elem, text) {
+    elem[_insertAdjacentHTML]("afterEnd", text);
   }
 
 
@@ -471,7 +486,6 @@ var r = (function(doc, toArray, enc) {
  * send XMLHttpRequest to given URL to get data
  * @name ajax
  * @function
- * @nosideeffects
  * @memberOf r
  * @param url {string}
  * @param success {function(string, Object)}
@@ -574,6 +588,11 @@ var r = (function(doc, toArray, enc) {
 
 
   // add public method to R
+
+  add.prev = addPrev;
+  add.first = addFirst;
+  add.last = addLast;
+  add.next = addNext;
 
   R.id = id;
   R.cls = cls;

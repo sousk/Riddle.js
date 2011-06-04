@@ -94,5 +94,12 @@ test("r.fn.add - add text", function() {
 
   ul.add("fuga");
 
-  ok ( r("#addto3").html().match(/hoge\s*fuga/), "text node inserted" );
+  ok ( r("#addto3").html().match(/hoge\s*fuga/), "fuga inserted to last" );
+
+  ul.add("piyo", "first");
+
+  ok ( r("#addto3").html().match(/piyo\s*hoge\s*fuga/), "piyo inserted to first" );
+
+  ul.add("madoka", "prev");
+  ul.add("homura", "next");
 });
