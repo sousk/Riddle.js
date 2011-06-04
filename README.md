@@ -1,7 +1,7 @@
 Riddle.js
 =======
 
-Riddle.js is simple and stupid selector-based JavaScript library mainly for iPhone and Android devices.
+Riddle.js is simple and stupid selector-based JavaScript library mainly for iPhone and Android devices. ( currently alpha-quality )
 
 * riddle.min.js -> Riddle.js minified with Closure Compiler
 * riddle-all.min.js -> Riddle.js and all included plugins combined and minified with Closure Compiler
@@ -10,7 +10,6 @@ Riddle.js is simple and stupid selector-based JavaScript library mainly for iPho
 Riddle.js is:
 -------
 
-* currently alpha-quality
 * to be thin wrapper
 * to be small-sized
 
@@ -19,7 +18,7 @@ Riddle.js is not:
 -------
 
 * to do all for you
-* willing to take you to library lock-in
+* willing to kick you to library lock-in
 * for people who like to dream eternally in comfortable DSL
 
 
@@ -28,8 +27,7 @@ Features
 
 * wait DOMContentLoaded with r({fucntion})
 * jQuery-like selector with r({string})
-* DOM manipulation ( html, add, remove ) for selector result
-* Attribute modifier ( attr, css, addClass, removeClass ) for selector result
+* DOM manipulation ( html, add, remove ) for selector result * Attribute modifier ( attr, css, addClass, removeClass ) for selector result
 * Event bindings ( bind, unbind, click, sunmit, focus, ... ) for selector result
 * Array++ functions ( detect, invoke, pluck ) for selector result
 * xhr wrapper with r.ajax
@@ -47,7 +45,7 @@ More
 Included Plugins
 -------
 
-* touch events with touch.js ( Currently swipeLeft and swipeRight only )
+* touch.js ( Currently supports swipeLeft and swipeRight only )
 
 
 FNAQ ( Frequently but Never Asked Questions )
@@ -55,5 +53,4 @@ FNAQ ( Frequently but Never Asked Questions )
 
 * Why Riddle doesn't support method chain? -> Because that is nothing.
 * Why Riddle doesn't give me target element as "this" for event handlers? -> I'm just thinking about it.
-* Riddle have full-compatible interface with jQuery or other libraries? -> No.
 * I want "foobar" feature. -> Give me message or pull request. I'll implement or merge if reasonable.
