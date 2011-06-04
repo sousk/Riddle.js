@@ -193,12 +193,14 @@ var r = (function(doc, toArray, enc) {
  * r("#story").html(r("li#stories"));
  */
   function html(item) {
+    var outers;
+
     if ( typeof item === "undefined" ) {
       if ( this.length === 1 ) {
-        return this[0].innerHTML.trim();
+        return this[0].innerHTML;
       }
       else {
-        return this.pluck("innerHTML").map(function(html) { return html.trim() });
+        return this.pluck("innerHTML").map(function(html) { return html; });
       }
     }
     else {
@@ -209,8 +211,9 @@ var r = (function(doc, toArray, enc) {
         this.forEach(function(elem) { elem.innerHTML = item.outerHTML; });
       }
       else if ( item.__proto__ === r.fn ) {
+        outers = item.map(function(el) { return el.outerHTML; }).join("");
         this.forEach(function(elem) {
-          elem.innerHTML = item.map(function(el) { return el.outerHTML }).join("");
+          elem.innerHTML = outers;
         });
       }
     }
@@ -221,11 +224,12 @@ var r = (function(doc, toArray, enc) {
  * @name remove
  * @function
  * @memberOf r.fn
+ * @return {NodeArray}
  * @example
  * r("#mami .head").remove();
  */
   function remove() {
-    this.forEach(function(elem) { elem.parentNode.removeChild(elem) });
+    return wrap(this.map(function(elem) { return elem.parentNode.removeChild(elem); }));
   }
 
 /**
@@ -233,23 +237,31 @@ var r = (function(doc, toArray, enc) {
  * @name add
  * @function
  * @memberOf r.fn
- * @param elem {(HTMLElement|NodeArray)}
+ * @param elem {(HTMLElement|NodeArray|string)}
  * @example
  * r(".magical-girl").add(document.getElementById("#madoka"));
  * @example
  * r(".magical-girl").add(r("#madoka, #homura"));
+ * @example
+ * r("#QB").add("injuu");
  */
-  function add(item) {
+  function add(item, position) {
+    var flg, clone;
+
     if ( item.__proto__ === r.fn ) {
-      this.forEach(function(elem) {
-        item.forEach(function(el) {
-          elem.appendChild(el);
-        });
-      });
+      flg = doc.createDocumentFragment();
+      item.forEach(function(elem) { flg.appendChild(elem); });
+      this.forEach(function(elem) { elem.appendChild(flg); });
     }
     else if ( item instanceof HTMLElement ) {
+      clone = item.cloneNode(true);
       this.forEach(function(elem) {
-        elem.appendChild(item);
+        elem.appendChild(clone);
+      });
+    }
+    else if ( typeof item === "string" ) {
+      this.forEach(function(elem) {
+        elem.insertAdjacentHTML("beforeEnd", item);
       });
     }
   }
@@ -327,6 +339,8 @@ var r = (function(doc, toArray, enc) {
  * r(".monster").css( { visibility: "visible", background-color: "red" } );
  */
   function css(key, value) {
+    var param = {};
+
     if ( typeof key === "string" ) {
       if ( typeof value === "undefined" ) {
         if ( this.length === 1 ) {
@@ -339,7 +353,6 @@ var r = (function(doc, toArray, enc) {
         }
       }
       else {
-        var param = {};
         param[key] = value;
         this.forEach(function(elem) {
           elem.style.cssText += ";" + cssPair(param);
