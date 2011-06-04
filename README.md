@@ -1,7 +1,7 @@
 Riddle.js
 =======
 
-Riddle.js is simple and stupid selector-based JavaScript library mainly for iPhone and Android devices. ( currently alpha-quality )
+Riddle.js is simple and stupid selector-based JavaScript library mainly for iPhone and Android devices ( currently alpha-quality )
 
 * riddle.js (14k) -> original Riddle.js source code, for development
 * riddle.min.js (3.9k) -> Riddle.js minified with Closure Compiler, for production
@@ -28,7 +28,8 @@ Features
 
 * wait DOMContentLoaded with r({fucntion})
 * jQuery-like selector with r({string})
-* DOM manipulation ( html, add, remove ) for selector result * Attribute modifier ( attr, css, addClass, removeClass ) for selector result
+* DOM manipulation ( html, add, remove ) for selector result
+* Attribute modifier ( attr, css, addClass, removeClass ) for selector result
 * Event bindings ( bind, unbind, click, sunmit, focus, ... ) for selector result
 * Array++ functions ( detect, invoke, pluck ) for selector result
 * xhr wrapper with r.ajax
