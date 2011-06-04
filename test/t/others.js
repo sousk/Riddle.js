@@ -20,26 +20,24 @@ test("r.cls", function() {
 test("r.fn.addClass", function() {
   var none = r("#div1");
   none.addClass("red");
-  is ( none.css("float"), "left", "normal got red");
+  is ( none.css("float"), "left", "normal got red" );
 });
 
 test("r.fn.removeClass", function() {
   var red = r("#div2");
-  console.log(red[0].className);
 
+  red.addClass("redmine");
   red.removeClass("red");
-  is ( red.css("float"), "none", "red lost red");
+  is ( red.css("float"), "none", "red lost red" );
+  is ( red.css("visibility"), "hidden", "red did not lost redmine" );
 
   red.addClass("green");
-  is ( red.css("float"), "right", "red got green");
-
-  console.log(red[0].className);
+  red.addClass("green");
+  is ( red.css("float"), "right", "red got green * 2" );
 
   red.removeClass("green");
-  is ( red.css("float"), "none", "red lost green");
+  is ( red.css("float"), "none", "red lost green * 2" );
 
   red.addClass("red");
-  is ( red.css("float"), "left", "red got red");
-
-  console.log(red[0].className);
+  is ( red.css("float"), "left", "red got red" );
 });

@@ -382,8 +382,9 @@ var r = (function(doc, toArray, enc) {
  * @param className {string}
  */
   function removeClass(name) {
+    var regex = new RegExp("(?:^|\\b)" + name + "(?:\\b|$)\\s?", "g");
     this.forEach(function(elem) {
-      elem.className = elem.className.replace(name, " ");
+      elem.className = elem.className.replace(regex, "");
     });
   }
 
