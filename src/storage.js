@@ -5,11 +5,24 @@
   }
 
   function set(key, value) {
-    this.storage[key] = JSON.stringify(value);
+    if ( typeof key === "number" || typeof key === "string" ) {
+      this.storage.setItem(key, JSON.stringify(value));
+    }
+    else if ( typeof value === "undefined" ) {
+      throw Error("typeof value is 'undefined'. Maybe you're doing something wrong");
+    }
+    else {
+      throw Error("Given value as key is OK but seems not a good manner");
+    }
   }
 
   function get(key) {
-    return JSON.parse(this.storage[key]);
+    if ( typeof this.storage[key] === "undefined" ) {
+      return null;
+    }
+    else {
+      return JSON.parse(this.storage.getItem(key));
+    }
   }
 
   function clear() {
@@ -34,7 +47,7 @@
     var result = [], k;
 
     for ( k in this.storage ) {
-      result.push(this.storage[k]);
+      result.push(this.get(k));
     }
 
     return result;
@@ -44,10 +57,12 @@
   RStorage.prototype.get = get;
   RStorage.prototype.clear = clear;
   RStorage.prototype.size = size;
+  RStorage.prototype.keys = keys;
+  RStorage.prototype.values = values;
 
 
   function storage(name) {
-    return storage.name || (storage.name = new RStorage(window[name + "Storage"]));
+    return storage.sname || (storage.sname = new RStorage(window[name + "Storage"]));
   }
 
   r.storage = storage;
