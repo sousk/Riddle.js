@@ -1,4 +1,4 @@
-var r = (function(doc, toArray, enc) {
+(function(doc, toArray, enc) {
 
   var listeners = {}, nodeId = 1,
       events = ["click", "submit", "focus", "blur", "scroll", "select", "change"],
@@ -12,6 +12,7 @@ var r = (function(doc, toArray, enc) {
  * <li>Just to wrap HTMLElement with r(elem: HTMLElement)
  * <ul/>
  * @name r
+ * @namespace
  * @function
  * @param first {(string|function|HTMLElement)}
  * @param second {?HTMLElement}
@@ -29,7 +30,7 @@ var r = (function(doc, toArray, enc) {
  *   var wrapped = r(e.target);
  * });
  */
-  function R(first, second) {
+  function r(first, second) {
     if ( typeof first === "string" ) {
       if ( typeof second === "undefined" || second instanceof HTMLElement ) {
         return $(first, second);
@@ -65,7 +66,7 @@ var r = (function(doc, toArray, enc) {
       ary = toArray.call(ary);
     }
 
-    ary.__proto__ = R.fn;
+    ary.__proto__ = r.fn;
     return ary;
   }
 
@@ -74,7 +75,7 @@ var r = (function(doc, toArray, enc) {
   * @name r.fn
   * @class base class of HTMLElement Array collected by selector.
   */
-  R.fn = {
+  r.fn = {
     // Array++
     detect: detect,
     invoke: invoke,
@@ -101,12 +102,12 @@ var r = (function(doc, toArray, enc) {
   }, false);
 
   events.forEach(function(event) {
-    R.fn[event] = function(callback, useCapture) {
+    r.fn[event] = function(callback, useCapture) {
       this.bind(event, callback, useCapture);
     };
   });
 
-  R.fn.__proto__ = Array.prototype;
+  r.fn.__proto__ = Array.prototype;
 
 
 // Array++
@@ -491,8 +492,8 @@ var r = (function(doc, toArray, enc) {
 /**
  * send XMLHttpRequest to given URL to get data
  * @name ajax
- * @function
  * @memberOf r
+ * @function
  * @param url {string}
  * @param success {function(string, Object)}
  * @param error {?function(Object)}
@@ -595,12 +596,12 @@ var r = (function(doc, toArray, enc) {
 
   // add public method to R
 
-  R.id = id;
-  R.cls = cls;
-  R.ajax = ajax;
+  r.id = id;
+  r.cls = cls;
+  r.ajax = ajax;
 
-  R.version = "0.1.5";
+  r.version = "0.1.5";
 
-  return R;
+  this.r = r;
 
 })(document, Array.prototype.slice, encodeURIComponent);
