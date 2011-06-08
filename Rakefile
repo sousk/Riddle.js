@@ -1,8 +1,5 @@
 closure_command = "closure --compilation_level ADVANCED_OPTIMIZATIONS "
-
-jsfiles = Dir.glob("./src/*.js").reject { |file|
-  file =~ /min/;
-}
+jsfiles = Dir.glob("./src/*.js").reject { |f| f =~ /min/ }
 
 task :default => [:build, :build_all, :show]
 
@@ -11,7 +8,7 @@ task :build do
 end
 
 task :build_all do
-  sh closure_command + jsfiles.map{ |f| "--js " + f }.join(" ") + " > src/riddle-all.min.js"
+  sh closure_command + jsfiles.map { |f| "--js " + f }.join(" ") + " > src/riddle-all.min.js"
 end
 
 task :show do
