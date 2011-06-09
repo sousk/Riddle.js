@@ -596,6 +596,6 @@
 
   r.version = "0.1.6";
 
-  this.r = r;
+  window.r = r;
 
 })(document, Array.prototype.slice, encodeURIComponent);
