@@ -171,7 +171,6 @@
  * @function
  * @memberOf r.fn
  * @param html {(string|HTMLElement|NodeArray)}
- * @param html {?string}
  * @return {(string|Array.<string>)}
  * @example
  * var story = r("p#story").html();
@@ -216,7 +215,7 @@
  * @name remove
  * @function
  * @memberOf r.fn
- * @return {NodeArray}
+ * @return {NodeArray} removed Elements
  * @example
  * r("#mami .head").remove();
  */
@@ -569,7 +568,7 @@
  * @return NodeArray
  */
   function id(identifier, context) {
-    return wrap(id._[identifier] || (id._[identifier] = (context || doc).getElementById(identifier)));
+    return wrap((context || doc).getElementById(identifier));
   }
 
 /**
@@ -582,25 +581,20 @@
  * @return NodeArray
  */
   function cls(name, context) {
-    return wrap(cls._[name] || (cls._[name] = (context || doc).getElementsByClassName(name)));
+    return wrap((context || doc).getElementsByClassName(name));
   }
 
   function query(selector, context) {
-    return query._[selector] || (query._[selector] = (context || doc).querySelectorAll(selector));
+    return (context || doc).querySelectorAll(selector);
   }
 
-  id._ = {};
-  cls._ = {};
-  query._ = {};
-
-
-  // add public method to R
+  // add public method to r
 
   r.id = id;
   r.cls = cls;
   r.ajax = ajax;
 
-  r.version = "0.1.5";
+  r.version = "0.1.6";
 
   this.r = r;
 
